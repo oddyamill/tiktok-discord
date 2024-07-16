@@ -1,0 +1,10 @@
+{
+  "cannot_process_command": "Unable to process the command.",
+  "no_tiktok": "Unable to find the TikTok. Is the link correct?",
+  "video_not_loading": "The video is not loading. Please try again later.",
+  "video_not_supported": "This video is not supported.",
+  "tiktok_blocked": "TikTok has blocked the bot's request. The video will not be available.",
+  "open_in_tiktok": "Open in TikTok",
+  "message": "Message",
+  "original": "Original"
+}

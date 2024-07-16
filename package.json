@@ -1,0 +1,21 @@
+{
+  "name": "tiktok",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "deploy": "wrangler deploy",
+    "dev": "wrangler dev",
+    "start": "wrangler dev",
+    "tail": "wrangler tail",
+    "deploy-commands": "node --env-file .dev.vars scripts/deploy-commands.mjs"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20240117.0",
+    "typescript": "^5.0.4",
+    "wrangler": "^3.0.0"
+  },
+  "dependencies": {
+    "@oddyamill/discord-workers": "^1.1.2",
+    "discord-api-types": "^0.37.92"
+  }
+}
