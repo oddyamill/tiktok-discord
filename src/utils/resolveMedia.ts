@@ -71,6 +71,11 @@ const resolveVideo = async (tiktok: TikTok, init: RequestInit) => {
         continue
       }
 
+      if (+stream.headers.get('content-length')! > MAX_FILE_LENGTH) {
+        await stream.body?.cancel()
+        continue
+      }
+
       return {
         stream,
         format: 'mp4',
