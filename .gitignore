@@ -170,3 +170,8 @@ dist
 
 .dev.vars
 .wrangler/
+
+# ide
+
+.idea
+.vscode

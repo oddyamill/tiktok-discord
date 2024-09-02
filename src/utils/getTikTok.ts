@@ -27,9 +27,10 @@ export const getTikTok = async (id: string, env: Env) => {
 
     return {
       url,
+      author: tiktok.author,
       ...await resolveMedia(response, tiktok, env),
     }
-  } catch {
-    return
+  } catch (error) {
+    console.error(error)
   }
 }

@@ -12,6 +12,7 @@ import { Env } from './env'
 import { Interaction } from './interaction'
 import {
   getTikTok,
+  makeAuthorComponent,
   makeComponent,
   makeMessageURL,
   resolveArguments,
@@ -39,7 +40,7 @@ export const command = async (interaction: Interaction, t: Translator, env: Env,
         })
       }
 
-      const { format, stream, url } = data
+      const { format, author, stream, url } = data
 
       if (!stream) {
         return editResponse(interaction, {
@@ -58,7 +59,10 @@ export const command = async (interaction: Interaction, t: Translator, env: Env,
           components: [
             {
               type: ComponentType.ActionRow,
-              components: [makeComponent(t('open_in_tiktok'), url)],
+              components: [
+                makeComponent(t('open_in_tiktok'), url),
+                await makeAuthorComponent(author.nickname, author.id, author.uniqueId, author.avatarThumb, interaction, env, ctx),
+              ],
             },
           ],
         }

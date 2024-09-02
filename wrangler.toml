@@ -3,3 +3,11 @@ main = "src/worker.ts"
 compatibility_date = "2024-01-17"
 keep_vars = true
 workers_dev = false
+upload_source_maps = true
+
+[[kv_namespaces]]
+binding = "CACHE"
+id = "da05bb0c7ad34bfdac1f061d5c7d2717"
+
+[triggers]
+crons = ["0 12 * * 1"]

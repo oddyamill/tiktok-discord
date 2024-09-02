@@ -1,4 +1,6 @@
+export * from './emojiCache'
 export * from './getTikTok'
+export * from './makeAuthorComponent'
 export * from './makeComponent'
 export * from './makeMessageURL'
 export * from './resolveArguments'

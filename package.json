@@ -12,10 +12,10 @@
   "devDependencies": {
     "@cloudflare/workers-types": "^4.20240117.0",
     "typescript": "^5.0.4",
-    "wrangler": "^3.0.0"
+    "wrangler": "^3.73.0"
   },
   "dependencies": {
-    "@oddyamill/discord-workers": "^1.1.2",
-    "discord-api-types": "^0.37.92"
+    "@oddyamill/discord-workers": "^1.1.5",
+    "discord-api-types": "^0.37.98"
   }
 }

@@ -7,7 +7,12 @@ import {
 import { resolveCookie } from './resolveCookie'
 import { Env } from '../env'
 
-export const resolveMedia = async (response: Response, tiktok: TikTok, env: Env) => {
+export interface Media {
+  stream: Response
+  format: string
+}
+
+export const resolveMedia = async (response: Response, tiktok: TikTok, env: Env): Promise<Media | {}> => {
   const init: RequestInit = {
     headers: {
       Cookie: resolveCookie(response),
@@ -26,7 +31,7 @@ export const resolveMedia = async (response: Response, tiktok: TikTok, env: Env)
   return {}
 }
 
-const resolveImage = async (tiktok: TikTok, init: RequestInit, env: Env) => {
+const resolveImage = async (tiktok: TikTok, init: RequestInit, env: Env): Promise<Media> => {
   const { imagePost } = tiktok
 
   if (imagePost!.images.length > 1 && env.IMAGE_WORKER_ENDPOINT !== undefined) {
@@ -58,7 +63,7 @@ const resolveImage = async (tiktok: TikTok, init: RequestInit, env: Env) => {
   }
 }
 
-const resolveVideo = async (tiktok: TikTok, init: RequestInit) => {
+const resolveVideo = async (tiktok: TikTok, init: RequestInit): Promise<Media | {}> => {
   for (const bitrateInfo of tiktok.video.bitrateInfo!) {
     if (bitrateInfo.DataSize > MAX_FILE_LENGTH) {
       continue

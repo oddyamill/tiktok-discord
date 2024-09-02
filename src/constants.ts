@@ -1,5 +1,7 @@
 export const TIKTOK_ENDPOINT = 'https://tiktok.com/@/video/'
 
+export const TIKTOK_USER_ENDPOINT = 'https://tiktok.com/@'
+
 export const MAX_FILE_LENGTH = 25 * 1024 * 1024
 
 // https://stackoverflow.com/questions/74077377/regular-expression-to-match-any-tiktok-video-id-and-url#comment130792938_74077377
@@ -16,3 +18,5 @@ export const TIKTOK_HEADERS = {
 }
 
 export const IMAGE_WORKER_CACHE_TTL = 31556952
+
+export const EMOJI_CACHE_TTL = 604800
