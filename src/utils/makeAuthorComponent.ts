@@ -6,20 +6,20 @@ import { createApplicationEmoji } from '@oddyamill/discord-workers'
 import { arrayBufferToBase64 } from './arrayBufferToBase64'
 import { getComponentEmojiFromCache, putComponentEmojiToCache } from './emojiCache'
 import { TIKTOK_USER_ENDPOINT } from '../constants'
+import { Author } from '../tiktok'
 
 export const makeAuthorComponent = async (
-  label: string,
-  authorId: string,
-  authorUsername: string,
-  authorAvatar: string,
+  author: Author,
   interaction: Interaction,
   env: Env,
   ctx: ExecutionContext,
 ): Promise<APIButtonComponentWithURL> => {
+  const { id, nickname, uniqueId, avatarThumb } = author
+
   const component = makeComponent(
-    label,
-    TIKTOK_USER_ENDPOINT + authorUsername,
-    await getComponentEmojiFromCache(env, authorId)
+    nickname,
+    TIKTOK_USER_ENDPOINT + uniqueId,
+    await getComponentEmojiFromCache(env, id)
   )
 
   if (component.emoji !== undefined) {
@@ -28,8 +28,8 @@ export const makeAuthorComponent = async (
 
   const url =
     env.IMAGE_WORKER_ENDPOINT !== undefined
-      ? env.IMAGE_WORKER_ENDPOINT + '/circle?url=' + encodeURIComponent(authorAvatar)
-      : authorAvatar
+      ? env.IMAGE_WORKER_ENDPOINT + '/circle?url=' + encodeURIComponent(avatarThumb)
+      : avatarThumb
 
   const image = await fetch(url, {
     headers: {
@@ -46,12 +46,12 @@ export const makeAuthorComponent = async (
     const emoji = await createApplicationEmoji(
       env,
       interaction.application_id,
-      authorId,
+      id,
       'data:image/png;base64,' + arrayBufferToBase64(await image.arrayBuffer())
     )
 
     component.emoji = { id: emoji.id!, name: emoji.name! }
-    ctx.waitUntil(putComponentEmojiToCache(env, authorId, component.emoji))
+    ctx.waitUntil(putComponentEmojiToCache(env, id, component.emoji))
   } catch (error) {
     console.error(error)
   }

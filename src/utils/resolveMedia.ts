@@ -1,4 +1,4 @@
-import { TikTok } from '../tiktok'
+import { ItemStruct } from '../tiktok'
 import {
   TIKTOK_HEADERS,
   MAX_FILE_LENGTH,
@@ -12,7 +12,7 @@ export interface Media {
   format: string
 }
 
-export const resolveMedia = async (response: Response, tiktok: TikTok, env: Env): Promise<Media | {}> => {
+export const resolveMedia = async (tiktok: ItemStruct, response: Response, env: Env): Promise<Media | null> => {
   const init: RequestInit = {
     headers: {
       Cookie: resolveCookie(response),
@@ -28,10 +28,10 @@ export const resolveMedia = async (response: Response, tiktok: TikTok, env: Env)
     return resolveVideo(tiktok, init)
   }
 
-  return {}
+  return null
 }
 
-const resolveImage = async (tiktok: TikTok, init: RequestInit, env: Env): Promise<Media> => {
+const resolveImage = async (tiktok: ItemStruct, init: RequestInit, env: Env): Promise<Media> => {
   const { imagePost } = tiktok
 
   if (imagePost!.images.length > 1 && env.IMAGE_WORKER_ENDPOINT !== undefined) {
@@ -55,6 +55,8 @@ const resolveImage = async (tiktok: TikTok, init: RequestInit, env: Env): Promis
         format: 'mp4',
       }
     }
+
+    await stream.body?.cancel()
   }
 
   return {
@@ -63,7 +65,7 @@ const resolveImage = async (tiktok: TikTok, init: RequestInit, env: Env): Promis
   }
 }
 
-const resolveVideo = async (tiktok: TikTok, init: RequestInit): Promise<Media | {}> => {
+const resolveVideo = async (tiktok: ItemStruct, init: RequestInit): Promise<Media | null> => {
   for (const bitrateInfo of tiktok.video.bitrateInfo!) {
     if (bitrateInfo.DataSize > MAX_FILE_LENGTH) {
       continue
@@ -88,5 +90,5 @@ const resolveVideo = async (tiktok: TikTok, init: RequestInit): Promise<Media | 
     }
   }
 
-  return {}
+  return null
 }

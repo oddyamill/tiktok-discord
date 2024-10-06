@@ -11,7 +11,8 @@ export const localization = new Map<LocaleString, typeof defaultLocale>()
   .set(Locale.Russian, ru)
   .set(Locale.Ukrainian, uk)
 
-export type Translator = (key: keyof typeof defaultLocale) => string
+export type TranslatorKey = keyof typeof defaultLocale
+export type Translator = (key: TranslatorKey) => string
 
 export const getTranslator = (locale: LocaleString): Translator => {
   const translations = localization.get(locale) ?? defaultLocale

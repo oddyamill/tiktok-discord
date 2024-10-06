@@ -1,5 +1,3 @@
-// TODO: refactoring
-
 import {
   ComponentType,
   InteractionResponseType,
@@ -17,13 +15,14 @@ import {
   makeMessageURL,
   resolveArguments,
   resolveId,
+  resolveMedia,
 } from './utils'
 
 export const command = async (interaction: Interaction, t: Translator, env: Env, ctx: ExecutionContext): Promise<Response> => {
   const { text, message } = resolveArguments(interaction)
   const id = await resolveId(text)
 
-  if (!id) {
+  if (id === undefined) {
     return respond(InteractionResponseType.ChannelMessageWithSource, {
       content: t('no_tiktok'),
       flags: MessageFlags.Ephemeral,
@@ -32,26 +31,22 @@ export const command = async (interaction: Interaction, t: Translator, env: Env,
 
   ctx.waitUntil(
     (async () => {
-      const data = await getTikTok(id, env)
+      const [data, response, error] = await getTikTok(id)
 
-      if (!data) {
-        return editResponse(interaction, {
-          content: t('video_not_loading'),
-        })
+      if (error !== null) {
+        return editResponse(interaction, { content: t(error) })
       }
 
-      const { format, author, stream, url } = data
+      const media = await resolveMedia(data, response, env)
 
-      if (!stream) {
-        return editResponse(interaction, {
-          content: t('video_not_supported'),
-        })
+      if (media === null) {
+        return editResponse(interaction, { content: t('video_not_supported') })
       }
+
+      const { format, stream } = media
 
       if (!stream.ok) {
-        return editResponse(interaction, {
-          content: t('tiktok_blocked'),
-        })
+        return editResponse(interaction, { content: t('tiktok_blocked') })
       }
 
       const body = new FormData(),
@@ -60,8 +55,8 @@ export const command = async (interaction: Interaction, t: Translator, env: Env,
             {
               type: ComponentType.ActionRow,
               components: [
-                makeComponent(t('open_in_tiktok'), url),
-                await makeAuthorComponent(author.nickname, author.id, author.uniqueId, author.avatarThumb, interaction, env, ctx),
+                makeComponent(t('open_in_tiktok'), response.url),
+                await makeAuthorComponent(data.author, interaction, env, ctx),
               ],
             },
           ],

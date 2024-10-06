@@ -5,6 +5,9 @@ keep_vars = true
 workers_dev = false
 upload_source_maps = true
 
+[observability]
+enabled = true
+
 [[kv_namespaces]]
 binding = "CACHE"
 id = "da05bb0c7ad34bfdac1f061d5c7d2717"
