@@ -2,8 +2,6 @@ export const TIKTOK_ENDPOINT = 'https://tiktok.com/@/video/'
 
 export const TIKTOK_USER_ENDPOINT = 'https://tiktok.com/@'
 
-export const MAX_FILE_LENGTH = 25 * 1024 * 1024
-
 // https://stackoverflow.com/questions/74077377/regular-expression-to-match-any-tiktok-video-id-and-url#comment130792938_74077377
 export const TIKTOK_URL_REGEXP =
   /https:\/\/(?:m|www|vm|vt)?\.?tiktok\.com\/((?:.*\b(?:(?:usr|v|embed|user|video|photo)\/|\?shareId=|&item_id=)(\d+))|\w+)/

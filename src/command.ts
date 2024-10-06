@@ -37,7 +37,7 @@ export const command = async (interaction: Interaction, t: Translator, env: Env,
         return editResponse(interaction, { content: t(error) })
       }
 
-      const media = await resolveMedia(data, response, env)
+      const media = await resolveMedia(data, response, interaction, env)
 
       if (media === null) {
         return editResponse(interaction, { content: t('video_not_supported') })
