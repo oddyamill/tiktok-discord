@@ -4,7 +4,9 @@ import {
   APIPartialGuild,
 } from 'discord-api-types/v10'
 
-export type Interaction = { guild: APIPartialGuild | null } & (
-  | APIChatInputApplicationCommandInteraction
-  | APIMessageApplicationCommandInteraction
-)
+export type Interaction =
+  & { guild: APIPartialGuild | null }
+  & (
+    | APIChatInputApplicationCommandInteraction
+    | APIMessageApplicationCommandInteraction
+  )

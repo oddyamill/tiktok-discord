@@ -1,25 +1,24 @@
 import { APIMessageComponentEmoji } from 'discord-api-types/v10'
 import { EMOJI_CACHE_TTL } from '../constants'
-import { Env } from '../env'
+import { environment } from '../environment'
 
-export const getComponentEmojiFromCache = async (
-  env: Env,
-  authorId: string
-): Promise<APIMessageComponentEmoji | undefined> => {
-  return (await env.CACHE.get(authorId, 'json')) ?? undefined
-}
+const kv = (): KVNamespace => environment('CACHE')
 
-export const putComponentEmojiToCache = async (
-  env: Env,
+export async function getComponentEmojiFromCache(
   authorId: string,
-  emoji: APIMessageComponentEmoji
-): Promise<void> => {
-  await env.CACHE.put(authorId, JSON.stringify(emoji), { expirationTtl: EMOJI_CACHE_TTL })
+): Promise<APIMessageComponentEmoji | undefined> {
+  return (await kv().get(authorId, 'json')) ?? undefined
 }
 
-export const deleteComponentEmojiFromCache = async (
-  env: Env,
-  authorId: string
-): Promise<void> => {
-  await env.CACHE.delete(authorId)
+export async function putComponentEmojiToCache(
+  authorId: string,
+  emoji: APIMessageComponentEmoji,
+): Promise<void> {
+  await kv().put(authorId, JSON.stringify(emoji), { expirationTtl: EMOJI_CACHE_TTL })
+}
+
+export async function deleteComponentEmojiFromCache(
+  authorId: string,
+): Promise<void> {
+  await kv().delete(authorId)
 }

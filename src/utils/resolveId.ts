@@ -1,40 +1,34 @@
 import { TIKTOK_URL_REGEXP } from '../constants'
 
-export const resolveId = async (text: string): Promise<string | undefined> => {
+export async function resolveId(text: string): Promise<string | undefined> {
   let match = text.match(TIKTOK_URL_REGEXP)
 
   if (match !== null) {
-    try {
-      const url = new URL(match[0])
+    switch (match.groups?.host) {
+      case 'vm.tiktok.com':
+      case 'vt.tiktok.com': {
+        const response = await fetch(match[0], {
+          method: 'HEAD',
+          redirect: 'manual',
+        })
 
-      switch (url.hostname) {
-        case 'vm.tiktok.com':
-        case 'vt.tiktok.com': {
-          const response = await fetch(url, {
-            method: 'HEAD',
-            redirect: 'manual',
-          })
-
-          const location = response.headers.get('location')
-          if (location === null) {
-            return
-          }
-
-          match = location.match(TIKTOK_URL_REGEXP)
-          if (match === null) {
-            return
-          }
+        const location = response.headers.get('location')
+        if (location === null) {
+          return
         }
 
-        case 'tiktok.com':
-        case 'm.tiktok.com':
-        case 'www.tiktok.com': {
-          return match[match.length - 1]
+        match = location.match(TIKTOK_URL_REGEXP)
+        if (match === null) {
+          return
         }
       }
-    } catch {}
 
-    return
+      case 'tiktok.com':
+      case 'm.tiktok.com':
+      case 'www.tiktok.com': {
+        return match.groups?.id
+      }
+    }
   }
 
   return text.match(/\d+/)?.[0]

@@ -5,7 +5,7 @@ import {
   ComponentType,
 } from 'discord-api-types/v10'
 
-export const makeComponent = (label: string, url: string, emoji?: APIMessageComponentEmoji): APIButtonComponentWithURL => {
+export function makeComponent(label: string, url: string, emoji?: APIMessageComponentEmoji): APIButtonComponentWithURL {
   return {
     type: ComponentType.Button,
     style: ButtonStyle.Link,

@@ -4,7 +4,7 @@ export const TIKTOK_USER_ENDPOINT = 'https://tiktok.com/@'
 
 // https://stackoverflow.com/questions/74077377/regular-expression-to-match-any-tiktok-video-id-and-url#comment130792938_74077377
 export const TIKTOK_URL_REGEXP =
-  /https:\/\/(?:m|www|vm|vt)?\.?tiktok\.com\/((?:.*\b(?:(?:usr|v|embed|user|video|photo)\/|\?shareId=|&item_id=)(\d+))|\w+)/
+  /https:\/\/(?<host>(?:m|www|vm|vt)?\.?tiktok\.com)\/(?:.*\b(?:(?:usr|v|embed|user|video|photo)\/|\?shareId=|&item_id=)(?<id>\d+)|\w+)/
 
 export const TIKTOK_HEADERS = {
   Referer: 'https://www.tiktok.com/',

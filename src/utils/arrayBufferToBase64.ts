@@ -10,7 +10,7 @@
 const encodings =
   'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/'
 
-export const arrayBufferToBase64 = (buffer: ArrayBuffer) => {
+export function arrayBufferToBase64(buffer: ArrayBuffer): string {
   const bytes = new Uint8Array(buffer),
     byteLength = bytes.byteLength,
     byteRemainder = byteLength % 3,

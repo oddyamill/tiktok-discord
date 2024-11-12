@@ -1,15 +1,14 @@
 import { GuildFeature } from 'discord-api-types/v10'
 import { Interaction } from '../interaction'
 
-export const resolveMaxFileSize = (interaction: Interaction) => {
+export function resolveMaxFileSize(interaction: Interaction): number {
   const features = interaction.guild?.features ?? []
 
   switch (true) {
-    case features?.includes(GuildFeature.AnimatedBanner):
+    case features.includes(GuildFeature.AnimatedBanner):
       return 100 * 1024 * 1024
 
-    // wtf??
-    case features?.includes('SEVEN_DAY_THREAD_ARCHIVE' as GuildFeature):
+    case features.includes(GuildFeature.RoleIcons):
       return 50 * 1024 * 1024
 
     default:

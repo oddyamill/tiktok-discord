@@ -14,9 +14,9 @@ const ErrorMessage: Record<string, TranslatorKey> = {
   ServiceUnavailable: 'service_unavailable',
 }
 
-const resolveErrorMessage = (videoDetail: VideoDetail): TranslatorKey => {
+function resolveErrorMessage(videoDetail: VideoDetail): TranslatorKey {
   const { statusMsg, statusCode } = videoDetail
-  console.log(videoDetail)
+  console.debug('video', videoDetail)
 
   switch (true) {
     case statusMsg.includes('status_self_see'):
@@ -40,7 +40,9 @@ const resolveErrorMessage = (videoDetail: VideoDetail): TranslatorKey => {
   }
 }
 
-export const getTikTok = async (id: string): Promise<[ItemStruct, Response, null] | [null, null, TranslatorKey]> => {
+export async function getTikTok(
+  id: string,
+): Promise<[ItemStruct, Response, null] | [null, null, TranslatorKey]> {
   const url = TIKTOK_ENDPOINT + id
   const response = await fetch(url)
 
@@ -51,8 +53,10 @@ export const getTikTok = async (id: string): Promise<[ItemStruct, Response, null
   try {
     const videoDetail = JSON.parse(
       (await response.text())
-        .split('<script id="__UNIVERSAL_DATA_FOR_REHYDRATION__" type="application/json">')[1]
-        .split('</script>')[0]
+        .split(
+          '<script id="__UNIVERSAL_DATA_FOR_REHYDRATION__" type="application/json">',
+        )[1]
+        .split('</script>')[0],
     ).__DEFAULT_SCOPE__['webapp.video-detail'] as VideoDetail
 
     if (videoDetail.itemInfo === undefined) {
@@ -61,7 +65,7 @@ export const getTikTok = async (id: string): Promise<[ItemStruct, Response, null
 
     return [videoDetail.itemInfo.itemStruct, response, null]
   } catch (error) {
-    console.error(error)
+    console.error('getTiktok error', error)
   }
 
   return [null, null, ErrorMessage.ServiceUnavailable]

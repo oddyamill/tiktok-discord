@@ -1,7 +1,7 @@
 import { ItemStruct } from '../tiktok'
-import { TIKTOK_HEADERS, IMAGE_WORKER_CACHE_TTL } from '../constants'
+import { IMAGE_WORKER_CACHE_TTL, TIKTOK_HEADERS } from '../constants'
 import { resolveCookie } from './resolveCookie'
-import { Env } from '../env'
+import { environment } from '../environment'
 import { Interaction } from '../interaction'
 import { resolveMaxFileSize } from './resolveMaxFileSize'
 
@@ -10,7 +10,7 @@ export interface Media {
   format: string
 }
 
-export const resolveMedia = async (tiktok: ItemStruct, response: Response, interaction: Interaction, env: Env): Promise<Media | null> => {
+export function resolveMedia(tiktok: ItemStruct, response: Response, interaction: Interaction): Promise<Media | null> {
   const init: RequestInit = {
     headers: {
       Cookie: resolveCookie(response),
@@ -21,24 +21,25 @@ export const resolveMedia = async (tiktok: ItemStruct, response: Response, inter
   const maxFileSize = resolveMaxFileSize(interaction)
 
   if (tiktok.imagePost !== undefined) {
-    return resolveImage(tiktok, init, maxFileSize, env)
+    return resolveImage(tiktok, init, maxFileSize)
   }
 
   if (tiktok.video.bitrateInfo !== undefined) {
     return resolveVideo(tiktok, init, maxFileSize)
   }
 
-  return null
+  return Promise.resolve(null)
 }
 
-const resolveImage = async (tiktok: ItemStruct, init: RequestInit, maxFileSize: number, env: Env): Promise<Media> => {
-  const { imagePost } = tiktok
+async function resolveImage(tiktok: ItemStruct,init: RequestInit, maxFileSize: number): Promise<Media> {
+  const { imagePost } = tiktok,
+    imageWorkerEndpoint = environment('IMAGE_WORKER_ENDPOINT')
 
-  if (imagePost!.images.length > 1 && env.IMAGE_WORKER_ENDPOINT !== undefined) {
-    const stream = await fetch(env.IMAGE_WORKER_ENDPOINT + tiktok.id, {
+  if (imagePost!.images.length > 1 && imageWorkerEndpoint !== undefined) {
+    const stream = await fetch(imageWorkerEndpoint + tiktok.id, {
       headers: {
-        'Cf-Access-Client-Id': env.IMAGE_WORKER_CLIENT_ID,
-        'Cf-Access-Client-Secret': env.IMAGE_WORKER_CLIENT_SECRET,
+        'Cf-Access-Client-Id': environment('IMAGE_WORKER_CLIENT_ID'),
+        'Cf-Access-Client-Secret': environment('IMAGE_WORKER_CLIENT_SECRET'),
       },
       cf: {
         cacheEverything: true,
@@ -65,7 +66,7 @@ const resolveImage = async (tiktok: ItemStruct, init: RequestInit, maxFileSize: 
   }
 }
 
-const resolveVideo = async (tiktok: ItemStruct, init: RequestInit, maxFileSize: number): Promise<Media | null> => {
+async function resolveVideo(tiktok: ItemStruct, init: RequestInit, maxFileSize: number): Promise<Media | null> {
   for (const bitrateInfo of tiktok.video.bitrateInfo!) {
     if (bitrateInfo.DataSize > maxFileSize) {
       continue

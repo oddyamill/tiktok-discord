@@ -4,18 +4,21 @@
   "private": true,
   "scripts": {
     "deploy": "wrangler deploy",
-    "dev": "wrangler dev",
     "start": "wrangler dev",
     "tail": "wrangler tail",
-    "deploy-commands": "node --env-file .dev.vars scripts/deploy-commands.mjs"
+    "deploy-commands": "node --env-file ./.dev.vars --experimental-strip-types ./scripts/deploy-commands.mts"
+  },
+  "dependencies": {
+    "@oddyamill/discord-workers": "^1.1.9",
+    "discord-api-types": "^0.37.101"
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^4.20240117.0",
+    "@types/node": "^22.8.1",
     "typescript": "^5.0.4",
     "wrangler": "^3.78.12"
   },
-  "dependencies": {
-    "@oddyamill/discord-workers": "^1.1.5",
-    "discord-api-types": "^0.37.101"
+  "engines": {
+    "node": "23.x"
   }
 }

@@ -1,4 +1,4 @@
-export const resolveCookie = (response: Response): string => {
+export function resolveCookie(response: Response): string {
   const setCookies = response.headers.get('set-cookie')
 
   if (setCookies === null) {
