@@ -9,7 +9,7 @@
     "deploy-commands": "node --env-file ./.dev.vars --experimental-strip-types ./scripts/deploy-commands.mts"
   },
   "dependencies": {
-    "@oddyamill/discord-workers": "^1.1.9",
+    "@oddyamill/discord-workers": "^1.2.0",
     "discord-api-types": "^0.37.101"
   },
   "devDependencies": {
