@@ -1,4 +1,4 @@
-import { TIKTOK_ENDPOINT } from '../constants'
+import { TIKTOK_ENDPOINT, TIKTOK_USER_AGENT } from '../constants'
 import { TranslatorKey } from '../localization'
 import { ItemStruct, VideoDetail } from '../tiktok'
 
@@ -43,8 +43,9 @@ function resolveErrorMessage(videoDetail: VideoDetail): TranslatorKey {
 export async function getTikTok(
   id: string,
 ): Promise<[ItemStruct, Response, null] | [null, null, TranslatorKey]> {
-  const url = TIKTOK_ENDPOINT + id
-  const response = await fetch(url)
+  const response = await fetch(TIKTOK_ENDPOINT + id, {
+    headers: { 'User-Agent': TIKTOK_USER_AGENT },
+  })
 
   if (!response.ok) {
     return [null, null, ErrorMessage.ServiceUnavailable]

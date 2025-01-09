@@ -15,6 +15,8 @@ export const TIKTOK_HEADERS = {
   'Accept-Language': 'en-US,en;q=0.9',
 }
 
+export const TIKTOK_USER_AGENT = 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.103 Safari/537.36'
+
 export const IMAGE_WORKER_CACHE_TTL = 31556952
 
 export const EMOJI_CACHE_TTL = 604800
